@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>東西方命理、諸葛預知術與周易心理學 - 全景診斷系統 (動態時間軸版)</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <header class="no-print">
+        <h1>🔮 命理、周易與諸葛預知術 - 全景診斷系統</h1>
+        <p>動態時間軸：以目前年紀為軸心剖析過去與未來最佳/最差 Top 3 時間</p>
+    </header>
+
+    <!-- 輸入設定表單 -->
+    <div class="card no-print">
+        <h2 class="card-title">📝 1. 出生資料與參數設定</h2>
+        <form id="analysisForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="userName">命主稱謂 / 姓名</label>
+                    <input type="text" id="userName" value="命主" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">性別</label>
+                    <select id="gender">
+                        <option value="男">男命</option>
+                        <option value="女">女命</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="birthDate">出生日期 (國曆)</label>
+                    <input type="date" id="birthDate" value="" required>
+                </div>
+                <div class="form-group">
+                    <label for="timeInputType">出生時間模式</label>
+                    <select id="timeInputType">
+                        <option value="exact">輸入精確時間 (時:分)</option>
+                        <option value="shichen" selected>選擇十二時辰</option>
+                    </select>
+                </div>
+                <div class="form-group" id="exactTimeGroup" style="display: none;">
+                    <label for="birthTime">精確時間</label>
+                    <input type="time" id="birthTime" value="23:15">
+                </div>
+                <div class="form-group" id="shichenGroup">
+                    <label for="shichenSelect">十二時辰選擇</label>
+                    <select id="shichenSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label for="birthPlace">出生地點選單</label>
+                    <select id="birthPlace"></select>
+                </div>
+            </div>
+            <label class="inline-check" id="solarGroup" style="display:none"><input type="checkbox" id="trueSolar"> 依出生地經度校正真太陽時（選用，僅精確時間模式）</label>
+            <label class="inline-check" style="margin-top:8px"><input type="checkbox" id="late23" checked> 23:00 後算次日（晚子時換日）</label>
+            <p class="hint">節氣依太陽黃經計算；時區固定為台灣標準時間（UTC+8），未處理歷史日光節約時間。</p>
+
+            <div class="form-group" style="margin-top:16px">
+                <label for="queryDT">流月／流日／流時查詢（選填：某件事發生的日期與時間，會列出與本命的沖合關係）</label>
+                <input type="datetime-local" id="queryDT">
+            </div>
+
+            <h2 class="card-title" style="margin-top: 25px;">🎯 2. 選擇剖析維度 (含動態時間軸未來預測)</h2>
+            <div class="checkbox-grid">
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="top3" checked> 🏆 命盤前三多優勢榜</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="future_timing" checked> 🔮 目前時間點軸心：過去 vs 未來最佳/最差Top3</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="calamity_warning" checked> ⚠️ 災厄血光預警與親人健康關煞</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="religion" checked> ⛩️ 鬼神信仰程度與適合宗教</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="career_job" checked> 💼 合適事業與工作領域</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="location" checked> 🗺️ 合適工作地點與方位</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="orientation" checked> 💖 性傾向與情感投射</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="elders" checked> 👴 長輩緣與貴人庇蔭</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="romance" checked> 🌸 桃花運與異性魅力</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="partner" checked> 💍 另一半個性與理想星座</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="physical_mental" checked> 🧠 身心狀態與健康</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="personality" checked> 👤 個性與認知特質</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="habits" checked> ⚡ 行為習慣與定式</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="hobbies" checked> 🎨 嗜好興趣與享受</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="features" checked> 🌟 外在氣質與風采</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="past_life" checked> 🌀 前世因果與業力</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="present_life" checked> 🚀 今生使命與發揮</label>
+                <label class="checkbox-label"><input type="checkbox" name="dimensions" value="recommendations" checked> 📋 全面建議與跨工具統整</label>
+            </div>
+
+            <button type="submit" class="btn-submit">🚀 產生五大體系綜合診斷報告 (含吉/凶獨立評比)</button>
+        </form>
+    </div>
+
+    <!-- 報告呈現區域 -->
+    <div id="reportCard" class="card hidden">
+        <button onclick="window.print()" class="btn-print no-print">🖨️ 列印 / 轉存 PDF</button>
+        <div id="reportContent"></div>
+    </div>
+</div>
+
+<script src="js/astro.js"></script>
+<script src="js/data.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/bazi.js"></script>
+<script src="js/ziwei.js"></script>
+<script src="js/bazi_analysis.js"></script>
+<script src="js/places.js"></script>
+<script src="js/scoring.js"></script>
+<script src="js/yijing.js"></script>
+<script src="js/psych.js"></script>
+<script src="js/facts.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/liuri.js"></script>
+<script src="js/dual.js"></script>
+<script src="js/dimensions.js"></script>
+<script src="js/report.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
