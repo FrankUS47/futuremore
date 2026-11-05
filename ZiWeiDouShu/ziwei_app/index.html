@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#4b0082">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="紫微排盤">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" type="image/png" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <title>紫微斗數線上排盤系統</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <h1>☯ 紫微斗數線上排盤系統 ☯</h1>
+
+    <div class="input-card">
+        <form id="ziweiForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="userName">姓名</label>
+                    <input type="text" id="userName" value="張三" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">性別</label>
+                    <select id="gender">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="calType">曆法選擇</label>
+                    <select id="calType">
+                        <option value="solar" selected>國曆（西曆）</option>
+                        <option value="lunar">陰曆（農曆）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthYear">出生年份</label>
+                    <select id="birthYear"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthMonth">出生月份</label>
+                    <select id="birthMonth"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDay">出生日期</label>
+                    <select id="birthDay"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthShichen">出生時辰</label>
+                    <select id="birthShichen"></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="flowDate">流運基準日</label>
+                    <input type="date" id="flowDate" min="1900-02-01" max="2030-12-31">
+                </div>
+
+                <div class="form-group form-check">
+                    <label><input type="checkbox" id="minorBright"> 雜曜顯示廟／平／陷</label>
+                </div>
+
+                <div class="msg" id="msg"></div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn-submit">排定紫微命盤</button>
+                    <div class="export-wrap">
+                        <select id="exportMode" aria-label="文字檔內容">
+                            <option value="full">全部資訊</option>
+                            <option value="stars">只存各宮星曜</option>
+                        </select>
+                        <button type="button" class="btn-export" id="btnExport">另存純文字檔 (12行一宮一行)</button>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    可切換國曆／農曆；晚子時（23:00～24:00）按次日農曆日安星。<br>
+                    「流運基準日」決定歲前十二神、將前十二神與盤面上的大限／小限／流年／流月／流日標記，預設為今天。
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="chart-container" id="chartContainer">
+        <div class="grid-board" id="gridBoard"></div>
+    </div>
+
+    <section class="reading" id="reading"></section>
+
+    <footer class="app-info" id="appInfo"></footer>
+
+    <script src="js/version.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/brightness_minor.js"></script>
+    <script src="js/lunar_table.js"></script>
+    <script src="js/lunar.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/reading_data.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/reading.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/render_reading.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/pwa.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

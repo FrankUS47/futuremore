@@ -1,0 +1,299 @@
+:root {
+    --bg-color: #f7f5f8;
+    --card-bg: #ffffff;
+    --border-color: #c090c0;
+    --purple-main: #8a2be2;
+    --purple-dark: #4b0082;
+    --red-main: #d32f2f;
+    --green-main: #2e7d32;
+    --text-dark: #212121;
+    --text-muted: #666666;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h1 {
+    color: var(--purple-dark);
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 8px;
+    width: 100%;
+    max-width: 1050px;
+}
+
+.input-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 18px;
+    width: 100%;
+    max-width: 1050px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(138, 43, 226, 0.1);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    align-items: end;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+
+label { font-size: 0.88rem; color: var(--purple-dark); font-weight: bold; }
+
+input, select {
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    color: var(--text-dark);
+    border-radius: 4px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+input:focus, select:focus {
+    border-color: var(--purple-main);
+    box-shadow: 0 0 5px rgba(138, 43, 226, 0.3);
+}
+
+.btn-group { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 5px; }
+
+button.btn-submit {
+    flex: 2; padding: 12px;
+    background: linear-gradient(135deg, #8a2be2, #4b0082);
+    color: #fff; border: none; border-radius: 4px;
+    font-size: 1.05rem; font-weight: bold; cursor: pointer;
+    transition: all 0.3s ease; letter-spacing: 1px;
+}
+button.btn-submit:hover { background: linear-gradient(135deg, #9932cc, #5a0099); box-shadow: 0 0 10px rgba(138, 43, 226, 0.4); }
+
+button.btn-export {
+    flex: 1; padding: 12px;
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: #fff; border: none; border-radius: 4px;
+    font-size: 1rem; font-weight: bold; cursor: pointer;
+    transition: all 0.3s ease; letter-spacing: 1px;
+}
+button.btn-export:hover { background: linear-gradient(135deg, #388e3c, #2e7d32); box-shadow: 0 0 10px rgba(46, 125, 50, 0.4); }
+
+.msg { color: var(--red-main); font-size: 0.9rem; grid-column: 1 / -1; text-align: center; }
+.hint { grid-column: 1 / -1; font-size: 0.8rem; color: var(--text-muted); text-align: center; line-height: 1.5; }
+
+.chart-container {
+    display: none;
+    width: 100%;
+    max-width: 1050px;
+    aspect-ratio: 1.1 / 1;
+    background: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    padding: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.grid-board {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    width: 100%; height: 100%;
+    gap: 2px;
+    background: #d8bfd8;
+    border: 1px solid #c090c0;
+}
+
+.palace-cell {
+    grid-row: var(--r);
+    grid-column: var(--c);
+    background: #ffffff;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    font-size: 0.82rem;
+    position: relative;
+}
+
+.center-cell {
+    grid-column: 2 / span 2;
+    grid-row: 2 / span 2;
+    background: #faf8fc;
+    border: 2px solid #c090c0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+    text-align: center;
+}
+
+.center-title { color: var(--purple-main); font-size: 1.6rem; font-weight: bold; letter-spacing: 2px; }
+.center-info { font-size: 0.92rem; color: var(--text-dark); line-height: 1.7; }
+.center-sihua { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.tag-sihua {
+    background: #f0e6fa; border: 1px solid var(--border-color); color: var(--purple-dark);
+    padding: 2px 8px; border-radius: 3px; font-size: 0.85rem; font-weight: bold;
+}
+
+/* 星曜:左欄(主星+六吉六煞)、右欄(雜曜) */
+.star-cols { display: flex; justify-content: space-between; gap: 4px; min-height: 48px; }
+.star-col { display: flex; flex-direction: column; gap: 1px; }
+.star-col-right { align-items: flex-end; text-align: right; }
+
+.star-item { white-space: nowrap; font-size: 0.82rem; line-height: 1.25; font-weight: bold; }
+.star-main { color: #8a2be2; }
+.star-good { color: #0066cc; }
+.star-bad { color: #cc0000; }
+.star-minor { color: #555555; font-weight: normal; font-size: 0.74rem; }
+.star-attr { font-size: 0.75rem; font-weight: normal; }
+.hua-祿 { color: #2e7d32; font-weight: bold; }
+.hua-權 { color: #1565c0; font-weight: bold; }
+.hua-科 { color: #ef6c00; font-weight: bold; }
+.hua-忌 { color: #d32f2f; font-weight: bold; }
+
+.middle-section { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2px 0; }
+.xusui-list { font-size: 0.72rem; color: #444; text-align: center; line-height: 1.1; letter-spacing: 0.5px; }
+.daxian-range { font-size: 0.95rem; font-weight: bold; color: #000; margin-top: 1px; }
+
+.bottom-section { display: flex; flex-direction: column; gap: 2px; margin-top: auto; }
+.shensha-top-line, .shensha-bottom-line {
+    display: flex; justify-content: space-between; font-size: 0.68rem; padding: 0 1px; line-height: 1.1;
+}
+.ss-changsheng { color: #d84315; }
+.ss-boshi { color: #c2185b; }
+.ss-suiqian { color: #2e7d32; }
+.ss-jiangqian { color: #1565c0; }
+
+.palace-footer {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 3px;
+    border-top: 1px solid #e0c0e0; padding-top: 2px;
+}
+.palace-name { font-weight: bold; color: #8a2be2; font-size: 0.88rem; }
+.is-ming { color: #d32f2f !important; background: #ffebee; padding: 0 3px; border-radius: 2px; }
+.gan-zhi { color: #2e7d32; font-size: 0.82rem; font-weight: bold; }
+.marks { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; flex: 1; }
+.mark { font-size: 0.66rem; color: #fff; background: #9c6ab8; border-radius: 2px; padding: 0 3px; line-height: 1.3; }
+.mark-大限 { background: #ad1457; }
+.mark-流年 { background: #1565c0; }
+.mark-小限 { background: #ef6c00; }
+
+
+/* ---- 大限宮、流年宮特別標示 ---- */
+.palace-cell.is-daxian { box-shadow: inset 0 0 0 3px #ad1457; background: #fff3f8; }
+.palace-cell.is-liunian { box-shadow: inset 0 0 0 3px #1565c0; background: #f1f6ff; }
+.palace-cell.is-daxian.is-liunian { box-shadow: inset 0 0 0 3px #ad1457, inset 0 0 0 6px #1565c0; background: #f8f2fb; }
+.mark-大限, .mark-流年 { font-size: 0.74rem; font-weight: bold; padding: 0 5px; }
+.muted { color: var(--text-muted); font-size: 0.82rem; }
+.center-info .muted { font-size: 0.8rem; }
+
+/* ---- 命盤解說 ---- */
+.reading {
+    display: none; width: 100%; max-width: 1050px; margin: 20px 0 30px;
+    background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 18px;
+    box-shadow: 0 2px 10px rgba(138, 43, 226, 0.1);
+}
+.reading h2 { color: var(--purple-dark); font-size: 1.3rem; margin-bottom: 6px; }
+.reading h3 { color: var(--purple-main); font-size: 1.05rem; margin: 18px 0 8px; border-left: 4px solid var(--border-color); padding-left: 8px; }
+.rd-legend { margin: 10px 0 4px; font-size: 0.85rem; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.rd-summary .sum-item { padding: 8px 10px; margin-bottom: 8px; border-radius: 6px; background: #faf8fc; line-height: 1.7; }
+.rd-summary .sum-big { border-left: 4px solid #ad1457; }
+.rd-summary .sum-ln { border-left: 4px solid #1565c0; }
+.rd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.rd-card { border: 1px solid #e0c8e8; border-radius: 6px; padding: 10px 12px; background: #fff; font-size: 0.88rem; line-height: 1.6; }
+.rd-card h4 { color: var(--purple-dark); font-size: 1rem; margin-bottom: 4px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rd-card .gz { color: var(--green-main); font-size: 0.85rem; }
+.rd-card.rd-ming { background: #fff8f8; border-color: #e57373; }
+.rd-card.rd-big { box-shadow: inset 0 0 0 2px #ad1457; }
+.rd-card.rd-ln { box-shadow: inset 0 0 0 2px #1565c0; }
+.rd-card.rd-big.rd-ln { box-shadow: inset 0 0 0 2px #ad1457, inset 0 0 0 4px #1565c0; }
+.tag { font-size: 0.7rem; color: #fff; border-radius: 2px; padding: 0 5px; }
+.tag-ming { background: #d32f2f; }
+.tag-shen { background: #2e7d32; }
+.rd-look { margin-bottom: 4px; }
+.note-empty { color: #b26a00; margin: 4px 0; }
+.star-notes { list-style: none; padding: 0; margin: 4px 0; }
+.star-notes li { margin-bottom: 2px; }
+.sn-main { color: #8a2be2; } .sn-good { color: #0066cc; } .sn-bad { color: #cc0000; } .sn-minor { color: #555; }
+.hua-note { color: #5d4037; font-size: 0.8rem; }
+.sfsz { margin-top: 6px; background: #faf8fc; border-radius: 4px; padding: 6px 8px; }
+.sfsz ul { list-style: none; padding: 0; }
+.hua-group { margin-top: 6px; font-size: 0.82rem; }
+.export-wrap { display: flex; gap: 6px; flex: 1.4; }
+.export-wrap select { flex: 1; min-width: 0; }
+.export-wrap .btn-export { flex: 1.2; }
+
+/* ---- 吉凶☆ ---- */
+.rd-score { display: flex; gap: 14px; margin: 2px 0 6px; font-size: 0.95rem; letter-spacing: 1px; }
+.sc-good { color: #d32f2f; }
+.sc-bad { color: #000; }
+
+/* ---- 本命四化、吉凶表示 ---- */
+.rd-chips { justify-content: flex-start; margin: 4px 0 8px; }
+.hua-chip-祿 { border-color: #2e7d32; }
+.hua-chip-權 { border-color: #1565c0; }
+.hua-chip-科 { border-color: #ef6c00; }
+.hua-chip-忌 { border-color: #d32f2f; }
+.hua-list { list-style: none; padding: 0; font-size: 0.9rem; line-height: 2; }
+.hua-list .tag-sihua { margin-right: 6px; }
+.sc-table { border-collapse: collapse; margin-top: 8px; font-size: 0.9rem; }
+.sc-table th, .sc-table td { border: 1px solid #e0c8e8; padding: 3px 14px; text-align: left; letter-spacing: 2px; }
+.sc-table th { background: #faf8fc; color: var(--purple-dark); letter-spacing: 0; }
+
+.form-check label { display: flex; align-items: center; gap: 6px; font-weight: normal; cursor: pointer; }
+.form-check input { width: 16px; height: 16px; }
+
+/* ---- 手機/平板(直式):盤面改為由命宮起依序的清單,字放大、按鈕好點 ---- */
+@media (max-width: 900px) {
+    body { padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); -webkit-text-size-adjust: 100%; }
+    h1 { font-size: 1.35rem; }
+    input, select { font-size: 16px; min-height: 44px; }          /* 16px 以上 iOS 才不會自動放大畫面 */
+    .btn-group { flex-direction: column; }
+    .export-wrap { flex: none; }
+    button.btn-submit, button.btn-export { min-height: 48px; }
+    .chart-container { aspect-ratio: auto; height: auto; }
+    .grid-board { grid-template-columns: repeat(2, 1fr); grid-template-rows: none; height: auto; }
+    .center-cell { grid-column: 1 / -1; grid-row: auto; order: -1; }
+    .palace-cell { grid-row: auto; grid-column: auto; order: var(--o); min-height: 250px; font-size: 0.9rem; padding: 6px; }
+    .star-item { font-size: 0.9rem; }
+    .star-minor { font-size: 0.8rem; }
+    .daxian-range { font-size: 1.05rem; }
+    .xusui-list { font-size: 0.78rem; }
+    .shensha-top-line, .shensha-bottom-line { font-size: 0.78rem; }
+    .palace-name { font-size: 0.98rem; }
+    .reading { padding: 12px; }
+    .rd-grid { grid-template-columns: 1fr; }
+    .sc-table { width: 100%; }
+}
+@media (max-width: 560px) {
+    .grid-board { grid-template-columns: 1fr; }
+    .palace-cell { min-height: 0; }
+    .center-title { font-size: 1.25rem; }
+    .center-cell { padding: 12px 8px; }
+}
+
+/* ---- App 資訊列、安裝提示 ---- */
+.app-info { width: 100%; max-width: 1050px; margin: 6px 0 24px; text-align: center; font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
+.app-info button { margin-left: 6px; padding: 6px 14px; border: 1px solid var(--purple-main); background: #fff; color: var(--purple-main); border-radius: 4px; font-size: 0.85rem; cursor: pointer; }
+.app-info .ok { color: var(--green-main); font-weight: bold; }
+@media print { .input-card, .app-info { display: none; } }
