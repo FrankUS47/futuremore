@@ -78,14 +78,14 @@
 
       <section id="view-draw" class="view" hidden>
         <h2>請誠心選一支籤</h2>
-        <p class="lead">籤筒裡有 100 支籤,籤號與內容都看不到。請誠心搖晃籤筒,停下來之後會跳出一支籤。<span id="redrawNote" class="redraw"></span></p>
+        <p class="lead">籤筒裡有 <span id="drawCount">100</span> 支籤,籤號與內容都看不到。請誠心搖晃籤筒,停下來之後會跳出一支籤。<span id="redrawNote" class="redraw"></span></p>
         <div id="tubeBox"></div>
         <div id="stickGrid" class="stick-grid"></div>
       </section>
 
       <section id="view-confirm" class="view" hidden>
         <h2>此籤是您的籤嗎?</h2>
-        <p class="lead">您抽到下面這支籤。請再向神明擲筊,得到聖筊才確定是這支籤。</p>
+        <p class="lead">您抽到的這支籤,籤上只刻著干支與第幾首。請再向神明擲筊,得到聖筊才確定是這支籤,屆時才會取出籤詩。</p>
         <div id="confirmPreview"></div>
         <div id="confirmPanel"></div>
       </section>
@@ -111,6 +111,7 @@
   <script src="js/motion.js"></script>
   <script src="js/bei.js"></script>
   <script src="poems/poems.js"></script>
+  <script src="poems/fengtian/poems.js"></script>
   <script src="js/poems.js"></script>
   <script src="js/grid.js"></script>
   <script src="js/tube.js"></script>

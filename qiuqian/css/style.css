@@ -364,3 +364,20 @@ textarea { resize: vertical; }
 .bei-pad.is-shaking .hands { animation: handSway calc(.32s / (.7 + var(--energy, 0))) ease-in-out infinite; transform-origin: 50% 100%; }
 .bei-pad.is-shaking .hands.follow { animation: none; transition: transform .07s linear; }
 @keyframes handSway { 0%,100% { transform: translateX(-28px) rotate(-5deg); } 50% { transform: translateX(28px) rotate(5deg); } }
+
+.sec-focus { border-color: var(--gold); background: #fff3d1; box-shadow: 0 0 0 2px rgba(184,138,44,.25); }
+.sec-focus summary { color: var(--red); }
+
+/* 確認頁:只顯示籤上刻的字 */
+.stick-card { display: grid; justify-items: center; gap: 10px; margin: 14px 0 18px; }
+.stick-face {
+  display: grid; justify-items: center; align-content: start; gap: 14px; width: 92px; min-height: 300px; padding: 26px 8px 22px;
+  background: linear-gradient(90deg, #8e2c18, #d9603a 50%, #8e2c18); border-radius: 12px 12px 4px 4px; color: #fff1cf;
+  box-shadow: 0 8px 14px rgba(60,20,10,.35), inset 0 0 0 2px rgba(255,220,160,.35); position: relative;
+}
+.stick-face::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 18px; background: #efe0b4; border-radius: 12px 12px 0 0; }
+.stick-face > span { writing-mode: vertical-rl; letter-spacing: .3em; text-shadow: 0 1px 1px rgba(60,15,8,.7); }
+.stick-series { font-size: .8rem; opacity: .8; margin-top: 6px; }
+.stick-gz { font-size: 1.7rem; font-weight: 700; }
+.stick-no { font-size: 1.5rem; font-weight: 700; color: #ffe08a; }
+.stick-cap { margin: 0; color: var(--ink-soft); }

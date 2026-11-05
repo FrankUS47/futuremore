@@ -100,7 +100,7 @@ QQ.Tube = class Tube {
     this.pad.classList.remove('rattling');
     this.meter.style.width = '0%';
     const num = QQ.random.int(this.o.total) + 1;
-    this.no.textContent = `第 ${num} 籤`;
+    this.no.textContent = `第${QQ.poems.cnNum(num)}${this.o.unit || '籤'}`;
     this.out.classList.add('show');
     this.hint.textContent = '一支籤跳出來了……';
     if (navigator.vibrate) { try { navigator.vibrate([40, 40, 60]); } catch (e) { /* ignore */ } }

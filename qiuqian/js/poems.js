@@ -51,11 +51,11 @@ QQ.poems = (function () {
     const seen = new Set();
     keys.forEach(k => {
       const v = cleanText(typeof src[k] === 'string' ? src[k] : JSON.stringify(src[k]));
-      if (!v || /付費服務/.test(v)) return;       // 空白或網頁廣告雜訊
+      if (!v || /付費服務|原檔案未包含/.test(v)) return;   // 空白、網頁廣告雜訊、占位文字
       const norm = v.replace(/\s+/g, '');
       if (seen.has(norm)) return;                // 內容完全相同的欄位(如 典故 / 故事)只留第一個
       seen.add(norm);
-      sections[k] = v;
+      sections[k] = k === '解析' ? v.replace(/[ \s]*(?=這首籤詩)/g, '\n').replace(/^\n+/, '') : v;   // 「這首籤詩…」各自成段
     });
     return {
       number: raw.number, id: raw.id,
@@ -145,5 +145,27 @@ QQ.poems = (function () {
     return arr.map((s, i) => s + (i === arr.length - 1 ? '。' : '，'));
   }
 
-  return { load, imageUrl, lines, pad, normalize, cleanText, available };
+  /* 依問事類別,從解析文字挑出「問功名,…。」這樣的分項句子(找不到就回傳空字串) */
+  function topic(text, category) {
+    const keys = (QQ.config.topics || {})[category] || [];
+    if (!text || !keys.length) return '';
+    const out = [];
+    (String(text).match(/問[^。]*。?/g) || []).forEach(c => {
+      const head = c.slice(1).split(/[,，]/)[0];
+      if (head.length <= 24 && keys.some(k => head.includes(k))) out.push(c.trim());
+    });
+    return out.join('\n');
+  }
+
+  /* 阿拉伯數字 → 國字(1–199):41 → 四十一、100 → 一百 */
+  function cnNum(n) {
+    const d = '零一二三四五六七八九';
+    n = Number(n);
+    if (n < 10) return d[n];
+    if (n < 20) return '十' + (n % 10 ? d[n % 10] : '');
+    if (n < 100) return d[Math.floor(n / 10)] + '十' + (n % 10 ? d[n % 10] : '');
+    return '一百' + (n % 100 ? (n % 100 < 10 ? '零' : '') + cnNum(n % 100) : '');
+  }
+
+  return { cnNum, topic, load, imageUrl, lines, pad, normalize, cleanText, available };
 })();

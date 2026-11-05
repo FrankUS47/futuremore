@@ -7,6 +7,12 @@
    之後新增或修改 JSON:雙擊 `轉檔.html` → 選 poems 資料夾 → 把下載的 poems.js 放回 poems 資料夾覆蓋。
    (放到網頁伺服器上時,也可直接讀 NNN.json。)
 
+## 籤種
+- **行天宮籤**(關聖帝君一百籤):`poems\NNN.json`、`images\NNN.jpg`。
+- **奉天宮籤**(媽祖六十甲子籤,共 60 首):`poems\fengtian\NNN.json`、`images\fengtian\NNN.jpg`。
+  資料夾裡另有合併檔 `poems\fengtian\poems.js`(雙擊 index.html 用);修改 JSON 後,用 `轉檔.html` 選 `poems\fengtian` 資料夾、籤種代號填 `fengtian`,產生新的 poems.js 放回去。
+- 奉天宮的解析會依您選的問事類別(功名/婚姻/求財…),把「問婚姻,…」這類對應的句子另外挑出來放在最前面(對照表在 `js/config.js` 的 `topics`)。
+
 ## 解籤欄位(日後可增加)
 `poems\NNN.json` 的 `sections` 裡有什麼欄位,解籤頁就顯示什麼,新增欄位不用改程式。
 想調整順序、隱藏或預設收合,改 `js/config.js` 的 `sections`(order / hide / collapsed)。

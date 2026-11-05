@@ -65,6 +65,7 @@
   function chooseSeries(s) {
     state.series = s;
     document.querySelectorAll('.patron').forEach(e => (e.textContent = s.patron));
+    $('#drawCount').textContent = s.total;
     $('#petitionSeries').textContent = `${s.name}(${s.official})`;
     updateVow();
     go('petition');
@@ -149,9 +150,9 @@
     grid.innerHTML = '';
     grid.hidden = true;
     state.panel = new QQ.Tube($('#tubeBox'), {
-      total: state.series.total,
+      total: state.series.total, unit: state.series.unit,
       onPick: (num) => onPick(num, null),
-      onGrid: () => {                              // 改用 100 支方格自己選
+      onGrid: () => {                              // 改用方格自己選
         state.panel = null;
         grid.hidden = false;
         QQ.grid.render(grid, state.series.total, onPick);
@@ -178,7 +179,7 @@
     const n = state.stick;
     const box = $('#confirmPreview');
     box.innerHTML = '';
-    box.append(poemCard(n, state.poem));
+    box.append(stickCard(n, state.poem));
     state.panel = new QQ.BeiPanel($('#confirmPanel'), {
       need: state.need, successLabel: '恭請解籤',
       failText: {
@@ -211,7 +212,22 @@
     return img;
   }
 
-  /* 確認頁的精簡卡片:圖 + 直書籤詩 */
+  /* 確認頁:只顯示「籤上刻的字」(干支與第幾首),不顯示籤詩圖、籤詩與任何解說。
+     籤上本來就只刻這些,確定是這支籤(聖筊)之後,才去取籤詩。 */
+  function stickCard(n, res) {
+    const data = res && res.ok ? res.data : null;
+    const gz = (data && data.ganzhi) || '';
+    const no = `第${QQ.poems.cnNum(n)}${state.series.unit || '籤'}`;
+    const card = h('article', 'stick-card');
+    const stick = h('div', 'stick-face');
+    stick.append(h('span', 'stick-series', state.series.temple));
+    if (gz) stick.append(h('span', 'stick-gz', gz));
+    stick.append(h('span', 'stick-no', no));
+    card.append(stick, h('p', 'stick-cap', `籤上刻著:${gz ? gz + ' ' : ''}${no}`));
+    return card;
+  }
+
+  /* 確認頁的精簡卡片:圖 + 直書籤詩(目前未使用,保留備用) */
   function poemCard(n, res) {
     const data = res && res.ok ? res.data : null;
     const card = h('article', 'poem-card');
@@ -251,6 +267,14 @@
       text.appendChild(poem);
     }
     const secs = (data && data.sections) || {};
+    const cat = state.petition && state.petition.category;      // 依問事類別,把對應的那句挑出來放最前面
+    const hit = cat && (QQ.config.sections.topicFrom || []).map(k => QQ.poems.topic(secs[k], cat)).find(Boolean);
+    if (hit) {
+      const d = h('details', 'sec sec-focus');
+      d.open = true;
+      d.append(h('summary', '', `您所問的「${cat}」`), h('div', 'sec-body', hit));
+      text.appendChild(d);
+    }
     Object.keys(secs).forEach(key => {           // 有什麼欄位就顯示什麼(順序已在 poems.js 整理好)
       const d = h('details', 'sec');
       d.open = !QQ.config.sections.collapsed.includes(key);
