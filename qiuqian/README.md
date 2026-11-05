@@ -1,0 +1,50 @@
+# 線上求籤
+
+## 使用方式
+純 HTML/JS,直接雙擊 `index.html` 即可。
+1. `poems\` 放 001.json … 100.json,`images\` 放 001.jpg … 100.jpg。
+2. 雙擊 index.html 時,瀏覽器不允許網頁讀本機 .json,所以解籤資料要合併成 `poems\poems.js`(本包已附好)。
+   之後新增或修改 JSON:雙擊 `轉檔.html` → 選 poems 資料夾 → 把下載的 poems.js 放回 poems 資料夾覆蓋。
+   (放到網頁伺服器上時,也可直接讀 NNN.json。)
+
+## 解籤欄位(日後可增加)
+`poems\NNN.json` 的 `sections` 裡有什麼欄位,解籤頁就顯示什麼,新增欄位不用改程式。
+想調整順序、隱藏或預設收合,改 `js/config.js` 的 `sections`(order / hide / collapsed)。
+重複的欄位、網頁廣告雜訊、「特別授權提供」來源標註會自動略過。
+
+## 其他功能
+- 年齡:選單 1歲–150歲,也可直接輸入;問事類別為下拉選單(config.js 的 categories)。
+- 抽籤:籤筒(晃動滑鼠/晃動手機,停下來跳出一支籤);也可改用 100 支方格自己選。
+- 擲筊:畫面是雙手捧筊的照片(img/hands.png),晃動時跟著搖;停下來後依結果播放對應動畫(img/toss_sheng/xiao/yin.webp,由使用者提供的 GIF 轉成,檔案較小、只播一次),播完才揭曉;聖筊會出現大大的金色圓圈與「聖筊」字樣(笑筊、陰筊為灰色 ✕)。
+- 擲筊規則:電腦晃動滑鼠;手機/平板晃動裝置(iOS 會請求感應器授權;手機瀏覽器需 HTTPS 才有感應器,否則改為手指滑動)。
+  測試可加 `?mode=mobile` / `?mode=desktop`。
+- 神明同意需 1 或 3 次連續聖筊,可在畫面右上角切換。
+
+## 檔案結構
+```
+index.html        主頁
+轉檔.html         把 poems\*.json 合併成 poems\poems.js
+css/style.css     樣式
+js/config.js      設定(籤種、欄位順序、類別、晃動靈敏度)
+js/poems.js       讀取與整理籤詩資料
+js/device.js      判斷電腦 / 手機 / 平板
+js/shake.js       滑鼠/手指晃動偵測
+js/motion.js      手機晃動偵測(devicemotion)
+js/bei.js         擲筊面板
+js/tube.js        籤筒
+js/grid.js        100 支籤(方格備用)
+js/random.js      亂數
+js/app.js         主流程
+poems\            籤詩 NNN.json + poems.js
+images\           籤詩圖 NNN.jpg
+```
+
+## 如何更換擲筊的圖片
+圖片都在 `img\`,設定在 `js/config.js` 最上面的 `handsImage` 與 `beiAnim`。
+- **雙手捧筊圖**:換掉 `img\hands.png`(或改 `handsImage` 的檔名)。建議去背的 PNG。
+- **三種結果動畫**:自己的 GIF 預設會一直重播,請先雙擊 `動畫轉檔.html` 處理(改成只播一次、停在最後一格,並算出 ms),再用這三個檔名放進 `img\`:
+  - `toss_sheng.gif` 聖筊(一陽一陰)
+  - `toss_xiao.gif`  笑筊(兩個平面朝上)
+  - `toss_yin.gif`   陰筊(兩個圓背朝上)
+  若新動畫的長度不同,請同步改 `beiAnim` 裡的 `ms`(格數 × 每格時間,單位毫秒),播完後畫面停在最後一格並一直停留,直到按「繼續擲筊 / 重新擲筊 / 前往抽籤」才換回捧筊圖。
+- 找不到動畫檔時,會自動改用內建的筊落下畫面,不會卡住。

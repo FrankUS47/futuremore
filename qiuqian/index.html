@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>線上求籤</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 筊杯的漸層(共用) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="gradFlat" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d4553a"/><stop offset=".6" stop-color="#c0452e"/><stop offset="1" stop-color="#a63624"/></linearGradient>
+      <linearGradient id="gradConvex" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8e2417"/><stop offset=".4" stop-color="#d9553b"/><stop offset=".75" stop-color="#b53a26"/><stop offset="1" stop-color="#7d1f14"/></linearGradient>
+      <clipPath id="clipBei"><path d="M84 6 C 22 8 -4 66 2 118 C 8 164 48 190 84 188 C 76 140 76 56 84 6 Z"/></clipPath>
+    </defs>
+  </svg>
+
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <span class="seal" aria-hidden="true">籤</span>
+        <div><h1>線上求籤</h1><p>誠心稟告 · 擲筊請示 · 抽籤解籤</p></div>
+      </div>
+      <label class="rule" title="需要連續幾個聖筊,才算神明同意">
+        <span>神明同意需</span>
+        <select id="needSelect" aria-label="擲筊規則"></select>
+      </label>
+    </header>
+
+    <ol class="steps" id="steps" aria-label="求籤步驟"></ol>
+
+    <main>
+      <section id="view-series" class="view" hidden>
+        <h2>請選擇要求的籤</h2>
+        <p class="lead">求籤之前,請先沐手淨心。一次只問一件事,一事一籤。</p>
+        <div id="dataBanner" class="banner" hidden>
+          <p>讀不到解籤資料。請用 <b>轉檔.html</b> 選擇 poems 資料夾,產生 <b>poems.js</b> 並放進 poems 資料夾後,重新整理本頁。</p>
+        </div>
+        <div id="seriesList" class="series-list"></div>
+      </section>
+
+      <section id="view-petition" class="view" hidden>
+        <h2>稟告神明</h2>
+        <p class="lead">您選擇的是 <strong id="petitionSeries"></strong>。請先向<span class="patron">恩主公</span>稟告姓名、年齡、住址,以及所求之事。</p>
+        <form id="petitionForm" novalidate>
+          <div class="notice">一事求一籤:請只問<strong>一件</strong>事,事由寫得越具體越好。</div>
+          <div class="grid2">
+            <div class="field"><label for="pName">姓名</label><input id="pName" maxlength="20" autocomplete="name"><p class="err"></p></div>
+            <div class="field"><label for="pAge">年齡 <span class="opt">(選單或直接輸入)</span></label>
+              <input id="pAge" list="ageList" inputmode="numeric" autocomplete="off" placeholder="1–150 歲" maxlength="3">
+              <datalist id="ageList"></datalist><p class="err"></p></div>
+          </div>
+          <div class="field"><label for="pAddr">住址</label><input id="pAddr" maxlength="80" autocomplete="street-address"><p class="err"></p></div>
+          <div class="field"><label for="pCat">問事類別</label>
+            <select id="pCat" class="sel"></select><p class="err"></p></div>
+          <div class="field">
+            <label for="pQuestion">事由說明 <span class="opt">(選填,寫得越具體越好)</span></label>
+            <textarea id="pQuestion" rows="2" maxlength="100" placeholder="例:今年轉換工作,是否順利?"></textarea>
+            <p class="hint"><span id="qCount">0 / 100</span></p>
+          </div>
+          <div class="vow"><span class="vow-label">稟告詞</span><p id="vowPreview"></p></div>
+          <label class="check"><input type="checkbox" id="pVow"> <span>我已虔誠向<span class="patron">恩主公</span>稟告,所述屬實</span><p class="err"></p></label>
+          <p class="privacy">您填寫的資料只存在這個瀏覽器頁面,不會上傳到任何地方。</p>
+          <div class="actions">
+            <button type="button" class="btn ghost" data-act="to-series">返回選籤種</button>
+            <button type="submit" class="btn primary">稟告完畢,請示擲筊</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="view-ask" class="view" hidden>
+        <h2>擲筊請示:可否求籤?</h2>
+        <p class="vow-read" id="askVow"></p>
+        <p class="lead">請向神明擲筊,得到<strong>聖筊</strong>(一陽一陰)才能開始抽籤。</p>
+        <div id="askPanel"></div>
+      </section>
+
+      <section id="view-draw" class="view" hidden>
+        <h2>請誠心選一支籤</h2>
+        <p class="lead">籤筒裡有 100 支籤,籤號與內容都看不到。請誠心搖晃籤筒,停下來之後會跳出一支籤。<span id="redrawNote" class="redraw"></span></p>
+        <div id="tubeBox"></div>
+        <div id="stickGrid" class="stick-grid"></div>
+      </section>
+
+      <section id="view-confirm" class="view" hidden>
+        <h2>此籤是您的籤嗎?</h2>
+        <p class="lead">您抽到下面這支籤。請再向神明擲筊,得到聖筊才確定是這支籤。</p>
+        <div id="confirmPreview"></div>
+        <div id="confirmPanel"></div>
+      </section>
+
+      <section id="view-result" class="view" hidden>
+        <h2>恭請解籤</h2>
+        <div id="resultBody"></div>
+        <div class="actions no-print">
+          <button type="button" class="btn ghost" data-act="print">列印 / 存成 PDF</button>
+          <button type="button" class="btn ghost" data-act="home">回到首頁</button>
+          <button type="button" class="btn primary" data-act="again">再求一籤(另問一事)</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">籤詩僅供參考 · 心誠則靈</footer>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/random.js"></script>
+  <script src="js/shake.js"></script>
+  <script src="js/device.js"></script>
+  <script src="js/motion.js"></script>
+  <script src="js/bei.js"></script>
+  <script src="poems/poems.js"></script>
+  <script src="js/poems.js"></script>
+  <script src="js/grid.js"></script>
+  <script src="js/tube.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

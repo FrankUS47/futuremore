@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>擲筊動畫轉檔</title>
+<style>
+body{font-family:"Microsoft JhengHei",sans-serif;max-width:720px;margin:36px auto;padding:0 16px;line-height:1.8;background:#fbf5e6;color:#2b1b14}
+button,select{font:inherit}button{padding:7px 18px;background:#a8261b;color:#fff;border:0;border-radius:4px;cursor:pointer}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0;padding:10px 12px;background:#fff;border:1px solid #d9c38a;border-radius:6px}
+.row b{flex:1 1 180px;word-break:break-all}.ms{color:#a8261b;font-weight:700}
+</style></head><body>
+<h1>擲筊動畫轉檔</h1>
+<p>GIF 預設會「一直重播」,擲筊結果畫面就會跟著跳回第一格。這個頁面把 GIF 改成<b>只播一次、停在最後一格</b>,並算出動畫長度(ms)。畫質不變,檔案內容不重新壓縮。</p>
+<p><button id="pick">選擇 GIF 檔(可一次選多個)</button> <input id="f" type="file" accept=".gif,image/gif" multiple hidden></p>
+<div id="list"></div>
+<p>步驟:① 選好 GIF → ② 每個檔案選它代表的結果 → ③ 按「下載」,存到程式的 <b>img</b> 資料夾(覆蓋同名檔) → ④ 把畫面上的 <b>ms</b> 數字填進 <b>js/config.js</b> 的 <code>beiAnim</code>。</p>
+<script>
+const NAME = { sheng: 'toss_sheng.gif', xiao: 'toss_xiao.gif', yin: 'toss_yin.gif' };
+document.getElementById('pick').onclick = () => document.getElementById('f').click();
+
+/* 解析 GIF:拿掉 NETSCAPE 重播區塊(沒有它就只播一次),並加總每格時間 */
+function patch(buf) {
+  const b = new Uint8Array(buf), out = [];
+  if (String.fromCharCode(...b.slice(0, 3)) !== 'GIF') throw new Error('不是 GIF 檔');
+  let p = 13;
+  if (b[10] & 0x80) p += 3 * (1 << ((b[10] & 7) + 1));
+  out.push(b.slice(0, p));
+  let ms = 0, frames = 0, removed = false;
+  const skipSub = (q) => { while (b[q] !== 0) q += b[q] + 1; return q + 1; };
+  while (p < b.length) {
+    const t = b[p];
+    if (t === 0x3B) { out.push(b.slice(p, p + 1)); break; }
+    if (t === 0x21) {
+      const label = b[p + 1];
+      const end = skipSub(p + 2);
+      if (label === 0xFF && String.fromCharCode(...b.slice(p + 3, p + 14)) === 'NETSCAPE2.0') { removed = true; p = end; continue; }
+      if (label === 0xF9) { let d = b[p + 4] | (b[p + 5] << 8); if (d <= 1) d = 10; ms += d * 10; }
+      out.push(b.slice(p, end)); p = end; continue;
+    }
+    if (t === 0x2C) {
+      frames++;
+      let q = p + 10, lct = b[p + 9] & 0x80 ? 3 * (1 << ((b[p + 9] & 7) + 1)) : 0;
+      q += lct + 1;
+      q = skipSub(q);
+      out.push(b.slice(p, q)); p = q; continue;
+    }
+    throw new Error('GIF 格式無法解析');
+  }
+  return { blob: new Blob(out, { type: 'image/gif' }), ms, frames, removed };
+}
+
+document.getElementById('f').onchange = async (ev) => {
+  const list = document.getElementById('list'); list.innerHTML = '';
+  for (const file of ev.target.files) {
+    const row = document.createElement('div'); row.className = 'row';
+    try {
+      const r = patch(await file.arrayBuffer());
+      const guess = /聖|sheng/i.test(file.name) ? 'sheng' : /笑|xiao/i.test(file.name) ? 'xiao' : /陰|yin/i.test(file.name) ? 'yin' : 'sheng';
+      row.innerHTML = `<b>${file.name}</b><span>${r.frames} 格,<span class="ms">ms = ${r.ms}</span>${r.removed ? '' : '(原本就只播一次)'}</span>
+        <select><option value="sheng">聖筊</option><option value="xiao">笑筊</option><option value="yin">陰筊</option></select><button>下載</button>`;
+      const sel = row.querySelector('select'); sel.value = guess;
+      row.querySelector('button').onclick = () => {
+        const a = document.createElement('a'); a.href = URL.createObjectURL(r.blob); a.download = NAME[sel.value]; a.click();
+      };
+    } catch (e) { row.textContent = file.name + ':' + e.message; }
+    list.appendChild(row);
+  }
+};
+</script></body></html>
