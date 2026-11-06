@@ -1,13 +1,13 @@
 /* 主流程:選籤種 → 稟告 → 擲筊請示 → 抽籤 → 擲筊確認 → 解籤。 */
 (function (QQ) {
   const $ = (s, r) => (r || document).querySelector(s);
-  const VIEWS = ['series', 'petition', 'ask', 'draw', 'result'];       // 抽籤與擲筊確認合併在同一頁('draw')
+  const VIEWS = ['mode', 'bei', 'series', 'petition', 'ask', 'draw', 'result'];       // 抽籤與擲筊確認合併在同一頁('draw')
   const STEP_OF = { series: 0, petition: 1, ask: 2, draw: 3, result: 5 };
   const STEP_LABELS = ['選擇籤種', '稟告神明', '擲筊請示', '抽取籤詩', '擲筊確認', '解籤'];
 
   const state = {
     series: null, petition: null, need: QQ.config.rules.defaultNeed,
-    stick: null, poem: null, panel: null, redraws: 0, view: 'series'
+    stick: null, poem: null, panel: null, redraws: 0, view: 'mode', mode: 'qiuqian', beiNeed: 1
   };
 
   /* 小工具:建立元素(一律用 textContent,不會把使用者輸入當成 HTML) */
@@ -38,10 +38,74 @@
     if (state.panel) { state.panel.destroy(); state.panel = null; }
     state.view = view;
     VIEWS.forEach(v => { $('#view-' + v).hidden = v !== view; });
-    renderSteps(STEP_OF[view]);
+    const plain = view === 'mode' || view === 'bei';              // 這兩頁不是求籤流程,不顯示步驟列和標題列的聖筊次數
+    $('#steps').hidden = plain;
+    $('.rule').hidden = plain;
+    if (!plain) renderSteps(STEP_OF[view]);
     window.scrollTo({ top: 0, behavior: 'auto' });
     const hd = $('#view-' + view + ' h2');
     if (hd) { hd.tabIndex = -1; hd.focus({ preventScroll: true }); }
+  }
+
+  /* ── 0. 選使用方式 / 測試擲筊 / 只問事 ─────────────────── */
+  function initModes() {
+    document.querySelectorAll('.mode-card').forEach(b => b.addEventListener('click', () => chooseMode(b.dataset.mode)));
+    const sel = $('#beiNeed');
+    for (let n = 1; n <= 9; n++) sel.appendChild(new Option(`${n} 次`, n));
+    const saved = Number(store.get('qq.beiNeed'));
+    if (saved >= 1 && saved <= 9) state.beiNeed = saved;
+    sel.value = state.beiNeed;
+    sel.addEventListener('change', () => {
+      state.beiNeed = Number(sel.value);
+      store.set('qq.beiNeed', state.beiNeed);
+      if (state.panel) state.panel.setNeed(state.beiNeed);
+    });
+    $('#bCat').appendChild(new Option('請選擇問事類別', ''));
+    QQ.config.categories.forEach(c => $('#bCat').appendChild(new Option(c, c)));
+    $('#beiForm').addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const box = $('#bCat').closest('.field');
+      box.classList.toggle('invalid', !$('#bCat').value);
+      box.querySelector('.err').textContent = $('#bCat').value ? '' : '請選擇問事類別';
+      if (!$('#bCat').value) return;
+      startBei();
+    });
+    $('[data-act="series-back"]').addEventListener('click', () => go('mode'));
+    $('[data-act="bei-home"]').addEventListener('click', restart);
+  }
+
+  function chooseMode(m) {
+    state.mode = m;
+    if (m === 'qiuqian') return go('series');
+    go('bei');
+    const q = m === 'query';
+    $('#beiTitle').textContent = q ? '只問事不抽籤' : '測試擲筊';
+    $('#beiForm').hidden = !q;
+    $('#beiVow').hidden = true;
+    $('#bCat').value = ''; $('#bQuestion').value = '';
+    $('#beiPanel').innerHTML = '';
+    if (!q) startBei();
+  }
+
+  function startBei() {
+    const q = state.mode === 'query';
+    const run = () => {
+      if (state.panel) { state.panel.destroy(); state.panel = null; }
+      if (q) {
+        $('#beiForm').hidden = true;
+        const qs = $('#bQuestion').value.trim();
+        $('#beiVow').textContent = `所問之事:${$('#bCat').value}${qs ? `(${qs})` : ''}`;
+        $('#beiVow').hidden = false;
+      }
+      state.panel = new QQ.BeiPanel($('#beiPanel'), {
+        need: state.beiNeed,
+        successLabel: q ? '神明允准,再問一事' : '再測一次',
+        failText: { xiao: '神明笑而不答,請再擲一次。', yin: '神明未允,請再擲一次。' },
+        failActions: [{ label: '重新擲筊', retry: true }, { label: '回到首頁', handler: restart }],
+        onSuccess: () => chooseMode(state.mode)
+      });
+    };
+    if (QQ.device.isMobile) QQ.motion.request().then(run); else run();
   }
 
   /* ── 1. 選籤種 ─────────────────────────────────────── */
@@ -334,7 +398,7 @@
 
   function restart() {
     state.stick = null; state.poem = null; state.redraws = 0;
-    go('series');
+    go('mode');
   }
 
   function again() {
@@ -364,6 +428,7 @@
       store.set('qq.need', state.need);
       if (state.panel) state.panel.setNeed(state.need);
     });
+    initModes();
     initSeries();
     initPetition();
     initBanner();
@@ -371,7 +436,7 @@
     $('[data-act="print"]').addEventListener('click', () => window.print());
     $('[data-act="again"]').addEventListener('click', again);
     $('[data-act="home"]').addEventListener('click', restart);
-    go('series');
+    go('mode');
   }
 
   document.addEventListener('DOMContentLoaded', init);

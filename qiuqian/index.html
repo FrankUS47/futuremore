@@ -31,6 +31,39 @@
     <ol class="steps" id="steps" aria-label="求籤步驟"></ol>
 
     <main>
+      <section id="view-mode" class="view" hidden>
+        <h2>請選擇使用方式</h2>
+        <div class="mode-list">
+          <button type="button" class="mode-card main" data-mode="qiuqian">
+            <span class="mode-name">線上求籤</span><span class="mode-tag">預設</span>
+            <span class="mode-desc">稟告神明 → 擲筊請示 → 抽籤 → 擲筊確認 → 解籤,完整求籤流程。</span>
+          </button>
+          <button type="button" class="mode-card" data-mode="query">
+            <span class="mode-name">只問事不抽籤</span>
+            <span class="mode-desc">只問一件事,擲筊請神明指示,不抽籤、不解籤。</span>
+          </button>
+          <button type="button" class="mode-card" data-mode="test">
+            <span class="mode-name">測試擲筊</span>
+            <span class="mode-desc">不用輸入任何資料,直接練習擲筊,可自訂連續聖筊次數。</span>
+          </button>
+        </div>
+      </section>
+
+      <section id="view-bei" class="view" hidden>
+        <h2 id="beiTitle">擲筊</h2>
+        <form id="beiForm" novalidate>
+          <div class="grid2">
+            <div class="field"><label for="bCat">問事類別</label><select id="bCat"></select><p class="err"></p></div>
+            <div class="field"><label for="bQuestion">事由說明(選填)</label><input id="bQuestion" maxlength="100" autocomplete="off"></div>
+          </div>
+          <button type="submit" class="btn primary">開始擲筊</button>
+        </form>
+        <p class="vow-read" id="beiVow" hidden></p>
+        <label class="bei-need"><span>需連續</span><select id="beiNeed" aria-label="連續聖筊次數"></select><span>個聖筊才算數</span></label>
+        <div id="beiPanel"></div>
+        <div class="actions no-print"><button type="button" class="btn ghost" data-act="bei-home">回到首頁</button></div>
+      </section>
+
       <section id="view-series" class="view" hidden>
         <h2>請選擇要求的籤</h2>
         <p class="lead">求籤之前,請先沐手淨心。一次只問一件事,一事一籤。</p>
@@ -38,6 +71,7 @@
           <p>讀不到解籤資料。請用 <b>轉檔.html</b> 選擇 poems 資料夾,產生 <b>poems.js</b> 並放進 poems 資料夾後,重新整理本頁。</p>
         </div>
         <div id="seriesList" class="series-list"></div>
+        <div class="actions"><button type="button" class="btn ghost" data-act="series-back">返回選擇使用方式</button></div>
       </section>
 
       <section id="view-petition" class="view" hidden>

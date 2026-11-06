@@ -529,3 +529,17 @@ h2 { font-size: 1.25rem; }
 .tube-stick::before { height: 30px; }
 .tube-out { margin-left: 92px; }
 @media (max-width: 560px) { .tube-out { margin-left: 80px; } .tube-stick { height: 200px; font-size: .95rem; } }
+
+/* 第 26 版:選擇使用方式 / 測試擲筊 / 只問事 */
+.mode-list { display: grid; gap: 12px; }
+.mode-card { font: inherit; text-align: left; display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 16px 18px; cursor: pointer; color: var(--ink);
+  background: linear-gradient(160deg, #fff9e8, var(--paper-2)); border: 1.5px solid var(--gold); border-radius: 6px; transition: transform .15s, box-shadow .15s; }
+.mode-card:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(122,23,18,.18); }
+.mode-card.main { border-color: var(--red); border-width: 2.5px; }
+.mode-name { font-size: 1.35rem; font-weight: 700; color: var(--red-d); letter-spacing: .12em; }
+.mode-tag { align-self: center; font-size: .75rem; padding: 1px 10px; background: var(--red); color: #fff; border-radius: 99px; }
+.mode-desc { grid-column: 1 / -1; font-size: .9rem; color: var(--ink-soft); }
+.bei-need { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 8px; font-size: .95rem; }
+.bei-need select { font: inherit; padding: 4px 8px; border: 1.5px solid var(--gold); border-radius: 4px; background: #fffdf5; }
+#view-bei .vow-read { margin: 4px 0; }
+#view-bei form .btn { margin-top: 8px; }
