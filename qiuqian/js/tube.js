@@ -17,7 +17,7 @@ QQ.Tube = class Tube {
   _render() {
     const dev = QQ.device;
     const chars = '誠心求籤靈驗吉祥如意平安福壽恩主慈悲保佑';
-    const cells = Array.from({ length: 18 }, (_, i) => `<i>${chars[i % chars.length]}</i>`).join('');
+    const cells = Array.from({ length: 6 }, (_, i) => `<i>${chars[i % chars.length]}</i>`).join('');
     /* 籤:30 支,在筒口左右散開、接近直立(只微微向外傾),高低錯落 */
     const N = 30;
     const sticks = Array.from({ length: N }, (_, i) => {
@@ -35,7 +35,7 @@ QQ.Tube = class Tube {
             <div class="tube-out" aria-live="polite"><span class="tube-stick"></span><span class="tube-no"></span></div>
             <div class="tube-shake">
               <div class="tube-sticks">${sticks}</div>
-              <div class="tube-body"><div class="tube-cells">${cells}</div></div>
+              <div class="tube-body"><div class="tube-label">${this.o.temple || ''}</div><div class="tube-cells">${cells}</div></div>
             </div>
           </div>
           <div class="meter"><i></i></div>
@@ -48,7 +48,7 @@ QQ.Tube = class Tube {
       </div>`;
     const $ = (s) => this.el.querySelector(s);
     this.pad = $('.tube-pad'); this.meter = $('.meter i'); this.hint = $('.pad-hint');
-    this.out = $('.tube-out'); this.no = $('.tube-no');
+    this.out = $('.tube-out'); this.stick = $('.tube-stick');
     this.useMotion = dev.isMobile && QQ.motion && QQ.motion.state === 'ready';
     const how = !dev.isMobile ? '晃動滑鼠' : (this.useMotion ? '晃動裝置' : '手指滑動');
     $('.mode-chip').textContent = `偵測到:${dev.label} · ${how}搖籤筒`;
@@ -100,11 +100,19 @@ QQ.Tube = class Tube {
     this.pad.classList.remove('rattling');
     this.meter.style.width = '0%';
     const num = QQ.random.int(this.o.total) + 1;
-    this.no.textContent = `第${QQ.poems.cnNum(num)}${this.o.unit || '籤'}`;
-    this.out.classList.add('show');
-    this.hint.textContent = '一支籤跳出來了……';
-    if (navigator.vibrate) { try { navigator.vibrate([40, 40, 60]); } catch (e) { /* ignore */ } }
-    this.timers.push(setTimeout(() => this.o.onPick(num), 1500));
+    const no = `第 ${QQ.poems.cnNum(num)}${this.o.unit || '籤'}`;
+    const show = (gz) => {
+      if (!this.el.isConnected) return;
+      this.stick.textContent = (gz ? gz + ' ' : '') + no;      // 籤身直書:干支 + 第幾籤
+      this.out.classList.add('show');
+      this.hint.textContent = '一支籤跳出來了……';
+      if (navigator.vibrate) { try { navigator.vibrate([40, 40, 60]); } catch (e) { /* ignore */ } }
+      this.timers.push(setTimeout(() => this.o.onPick(num), 1800));
+    };
+    Promise.race([
+      Promise.resolve(this.o.getGanzhi ? this.o.getGanzhi(num) : '').catch(() => ''),
+      new Promise(r => setTimeout(() => r(''), 1500))
+    ]).then(show);
   }
 
   setNeed() { /* 籤筒不受聖筊次數影響 */ }

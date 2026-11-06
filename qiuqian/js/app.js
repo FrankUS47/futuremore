@@ -52,7 +52,7 @@
       card.type = 'button';
       card.disabled = !s.enabled;
       card.append(
-        h('span', 'series-seal', s.temple.slice(-2)),
+        h('span', 'series-seal', s.temple),
         h('span', 'series-name', s.name),
         h('span', 'series-official', `${s.official} · 共 ${s.total} 首`),
         h('span', 'series-blurb', s.blurb),
@@ -156,7 +156,8 @@
     grid.innerHTML = '';
     grid.hidden = true;
     state.panel = new QQ.Tube($('#tubeBox'), {
-      total: state.series.total, unit: state.series.unit,
+      total: state.series.total, unit: state.series.unit, temple: state.series.temple,
+      getGanzhi: async (num) => { const r = await QQ.poems.load(state.series, num); return r.ok ? (r.data.ganzhi || '') : ''; },
       onPick: (num) => onPick(num, null),
       onGrid: () => {                              // 改用方格自己選
         state.panel = null;
@@ -183,7 +184,8 @@
     const go1 = h('button', 'btn primary', '擲筊確認:是這支籤嗎?');
     go1.type = 'button';
     go1.addEventListener('click', goConfirm);
-    box.append(stickCard(num, res, true), go1);
+    if (btn) box.append(stickCard(num, res, true));   // 籤筒抽籤時,籤身已寫明,不再重複
+    box.append(go1);
     box.hidden = false;
     box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }

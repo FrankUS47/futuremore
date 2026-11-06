@@ -514,3 +514,18 @@ h2 { font-size: 1.25rem; }
   #view-result .record { padding: 6px 10px; font-size: .85rem; }
   .app { padding-bottom: 8px; }
 }
+
+/* 第 22 版:籤跳出在籤筒右側、籤筒標示寺名、系列卡片印章用全名 */
+.series-seal { height: auto; width: 34px; padding: 8px 0; letter-spacing: .1em; }
+.tube-label { margin: 58px 12px 0; padding: 3px 0; text-align: center; font-weight: 700; letter-spacing: .3em; color: #f6e2a8; background: rgba(60,12,6,.45); border: 1px solid rgba(246,226,168,.6); border-radius: 3px; font-size: .95rem; }
+.tube-out { left: 50%; bottom: 14px; margin-left: 96px; transform: none; }
+.tube-out.show { animation: stickOut2 1.1s cubic-bezier(.2,.9,.3,1.1) forwards; }
+@keyframes stickOut2 { 0% { opacity: 0; transform: translate(-96px, -70px) rotate(-4deg); } 30% { opacity: 1; } 100% { opacity: 1; transform: translate(0, 0) rotate(5deg); } }
+@media (max-width: 560px) { .tube-out { margin-left: 84px; } }
+
+/* 第 23 版:籤身加長,直書干支與第幾籤 */
+.tube-stick { width: 34px; height: 230px; display: grid; place-items: center; padding-top: 30px; box-sizing: border-box;
+  writing-mode: vertical-rl; color: #fff3cf; font-weight: 700; font-size: 1.05rem; letter-spacing: .12em; text-shadow: 0 1px 2px rgba(60,10,0,.8); white-space: pre; }
+.tube-stick::before { height: 30px; }
+.tube-out { margin-left: 92px; }
+@media (max-width: 560px) { .tube-out { margin-left: 80px; } .tube-stick { height: 200px; font-size: .95rem; } }
