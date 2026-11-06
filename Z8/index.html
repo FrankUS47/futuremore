@@ -89,6 +89,7 @@ h1{color:var(--primary);margin:0 0 8px;font-size:1.8rem;letter-spacing:2px}
 .tier-note{color:#555;font-size:.9rem;margin:8px 0 0}
 .bone-blk{display:flex;gap:12px;padding:8px 0;border-bottom:1px dotted var(--border)}.bone-blk>span{flex:0 0 72px;color:var(--primary);font-weight:bold}.bone-blk>div{flex:1}
 .flow-form{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}.flow-form .form-group{min-width:150px}.flow-form input[type=time]{padding:8px 12px;border:1px solid var(--border);border-radius:4px}.btn.small{padding:8px 24px;font-size:1rem}.rel{display:inline-block;padding:0 4px;border-radius:2px}.rel-沖{background:#fde0dc;color:#b71c1c}.rel-刑{background:#fff0d9;color:#a65d00}.rel-害{background:#f3e5f5;color:#6a1b9a}.rel-合{background:#e0f2e9;color:#1b5e20}
+.zwrap{margin-bottom:18px}.zwrap .zgrid{margin-bottom:0}
 
 </style>
 </head>
@@ -1316,7 +1317,7 @@ const UI = (function () {
               <tr><th>流年四化</th><td>${Ziwei.HUA[D.STEMS[((inp.ref.y - 4) % 10 + 10) % 10]].map((n, i) => n + "化" + Ziwei.HUA_NAME[i]).join("、")}</td></tr>
               <tr><th>大限</th><td>${zw.fwd ? "順行" : "逆行"}　${inp.ref.y} 年虛歲 ${zw.nowAge}</td></tr>
             </table></div>`;
-        return `<div class="zgrid">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(cellHtml).join("")}${center}</div>`;
+        return `<div class="zwrap"><div class="zgrid">${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(cellHtml).join("")}${center}</div></div>`;
     }
     const GR = {};
     GRID.forEach((r, ri) => r.forEach((b, ci) => { if (b !== null) GR[b] = [ri + 1, ci + 1]; }));
@@ -1333,7 +1334,7 @@ const UI = (function () {
         const bads = sf.reduce((a, c) => a + c.minor.filter(s => s.kind === "bad").length, 0), goods = sf.reduce((a, c) => a + c.minor.filter(s => s.kind === "good").length, 0);
         const huas = sf.flatMap(c => c.huaList.map(h => `${c.name}${h}`));
         const tone = goods - bads >= 2 ? "吉星多於煞星，助力較足。" : goods - bads >= 0 ? "吉煞互見，宜穩中求進。" : "煞星較重，行事宜謹慎、避免冒進。";
-        return `<h4>${pname}宮（${desc}）三方四正</h4>
+        return `<h4>${pname}${pname.endsWith("宮") ? "" : "宮"}（${desc}）三方四正</h4>
             <table class="tbl small"><thead><tr><th>位置</th><th>宮位</th><th>主星</th><th>吉煞輔星</th></tr></thead><tbody>${rows}</tbody></table>
             <p><b>星性提示</b>：${esc(mains)}。</p>
             <p><b>四化引動</b>：${huas.length ? huas.join("、") : "三方四正無生年四化"}。${tone}</p>`;

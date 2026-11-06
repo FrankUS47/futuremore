@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8c2a2a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="八字紫微">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<title>八字命理與紫微斗數專業排盤分析系統</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>八字命理與紫微斗數專業排盤系統</h1>
+    <div class="subtitle">八字為主・紫微為輔</div>
+  </header>
+
+  <div class="input-grid">
+    <div class="form-group"><label for="userName">1. 姓名 / 稱呼</label><input type="text" id="userName" value="命主"></div>
+    <div class="form-group"><label for="gender">2. 性別</label>
+      <select id="gender"><option value="男">男</option><option value="女">女</option></select></div>
+    <div class="form-group wide"><label for="birthDate">3. 出生日期 (陽曆/國曆)</label><div class="dsel" id="birthDate"></div></div>
+    <div class="form-group"><label for="birthTime">4. 出生時辰</label>
+      <select id="birthTime">
+        <option value="00:30">子時（00:00～01:00 早子）</option>
+        <option value="02:00">丑時（01:00～03:00）</option>
+        <option value="04:00">寅時（03:00～05:00）</option>
+        <option value="06:00">卯時（05:00～07:00）</option>
+        <option value="08:00">辰時（07:00～09:00）</option>
+        <option value="10:00">巳時（09:00～11:00）</option>
+        <option value="12:00">午時（11:00～13:00）</option>
+        <option value="14:00">未時（13:00～15:00）</option>
+        <option value="16:00">申時（15:00～17:00）</option>
+        <option value="18:00">酉時（17:00～19:00）</option>
+        <option value="20:00" selected>戌時（19:00～21:00）</option>
+        <option value="22:00">亥時（21:00～23:00）</option>
+        <option value="23:30">子時（23:00～24:00 晚子）</option>
+      </select></div>
+    <div class="form-group"><label for="birthPlace">5. 出生地點</label><select id="birthPlace"></select>
+      <div id="customBox" class="custom-box" style="display:none">
+        <input type="number" id="customLon" step="0.01" placeholder="東經(西經填負值)">
+        <input type="number" id="customTz" step="0.5" placeholder="時區(如 8)" value="8"></div></div>
+    <div class="form-group"><label for="queryTopic">6. 占問主題焦點</label>
+      <select id="queryTopic">
+        <option value="general">整體格局 / 大運流年 / 綜合決策</option>
+        <option value="career">事業發展 / 升遷轉職 / 官運功名</option>
+        <option value="wealth">財務狀況 / 投資理財 / 財源聚散</option>
+        <option value="love">感情婚姻 / 擇偶配對 / 人際關係</option>
+        <option value="health">身體健康 / 疾病預警 / 臟腑調理</option>
+      </select></div>
+    <div class="form-group wide"><label for="refDate">7. 排盤日期 (流年大運依此計算)</label><div class="dsel" id="refDate"></div></div>
+    <div class="form-group"><label for="zishi">8. 晚子時 (23:00-23:59) 日柱</label>
+      <select id="zishi"><option value="next">算次日（早晚子時分界，通行）</option><option value="same">算當日（不換日）</option></select></div>
+    <div class="form-group check"><label><input type="checkbox" id="useTST"> 依出生地經度校正真太陽時</label>
+      <small>預設不校正。因只填時辰，勾選後以該時辰中點時間換算，僅在接近時辰邊界時才可能改變時柱。</small></div>
+  </div>
+
+  <div class="controls"><button class="btn" id="genBtn">排盤並生成分析報告</button></div>
+  <div id="errBox" class="err" style="display:none"></div>
+  <div id="result" style="display:none"></div>
+</div>
+<script src="js/astro.js"></script>
+<script src="js/data.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/bazi.js"></script>
+<script src="js/ziwei.js"></script>
+<script src="js/bone_data.js"></script>
+<script src="js/analysis.js"></script>
+<script src="js/places.js"></script>
+<script src="js/summary.js"></script>
+<script src="js/flow.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

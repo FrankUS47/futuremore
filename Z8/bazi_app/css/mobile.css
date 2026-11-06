@@ -1,0 +1,29 @@
+/* 手機版面（iPhone / Android） */
+.form-group{min-width:0}
+.form-group input,.form-group select{min-width:0;width:100%}
+.dsel select{width:auto}
+.dsel .dy{flex:1 1 auto;min-width:0}.dsel .dm,.dsel .dd{flex:0 0 21%}
+.container{min-width:0}
+html{-webkit-text-size-adjust:100%}
+body{padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));-webkit-tap-highlight-color:transparent}
+.form-group input,.form-group select,.dsel select{font-size:16px;min-height:44px}   /* 16px 以上可避免 iOS 點選時自動放大 */
+.btn{min-height:48px;width:100%;max-width:420px}
+.card{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.card .tbl{min-width:520px}
+.card .tbl.small{min-width:560px}
+.bazi-pillars .tbl{font-size:.85rem}
+.tbl th,.tbl td{padding:6px 4px}
+.zwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:18px}
+.zwrap .zgrid{min-width:700px;margin-bottom:0}
+.zhint{display:none;color:#777;font-size:.8rem;text-align:center;margin:-6px 0 8px}
+@media(max-width:760px){
+  .container{padding:14px;border-width:1px}
+  h1{font-size:1.35rem;letter-spacing:1px}
+  .input-grid{padding:12px;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form-group.wide{grid-column:span 2}
+  .input-grid .form-group.check{grid-column:span 2}
+  .zhint{display:block}
+  .sec-title{font-size:1.15rem}
+  .bar-label{width:92px}
+}
+@media(max-width:380px){.input-grid{grid-template-columns:minmax(0,1fr)}.form-group.wide,.input-grid .form-group.check{grid-column:span 1}}
