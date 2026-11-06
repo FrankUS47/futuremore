@@ -241,8 +241,18 @@ QQ.BeiPanel = class BeiPanel {
     if (A && this.animOk && typeof this.animOk[r.kind] === 'string' && !this.pad.classList.contains('no-photo')) {
       /* 雙手把筊丟出去:播放該結果的動畫(換網址參數讓動畫每次都從頭播),播完才揭曉 */
       this.pad.classList.add('animating');
-      this.handsImg.src = this.animOk[r.kind] + '?t=' + Date.now();
-      this._later(() => this._result(r), A.ms + 300);
+      /* 先在背景載入並解碼完,再換上去播,動畫就不會因為載入慢而被吃掉開頭 */
+      const url = this.animOk[r.kind] + '?t=' + Date.now();
+      const pre = new Image();
+      let started = false;
+      const play = () => {
+        if (started || this.destroyed) return;
+        started = true;
+        this.handsImg.src = url;
+        this._later(() => this._result(r), A.ms + 300);
+      };
+      pre.src = url;
+      (pre.decode ? pre.decode() : Promise.reject()).then(play, play);
       return;
     }
     this.pad.classList.add('landed', 'tossed', 'fallback');

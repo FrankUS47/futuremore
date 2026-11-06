@@ -102,7 +102,7 @@
         need: state.beiNeed,
         successLabel: q ? '神明允准,再問一事' : '再測一次',
         failText: { xiao: '神明笑而不答,請再擲一次。', yin: '神明未允,請再擲一次。' },
-        failActions: [{ label: '重新擲筊', retry: true }, { label: '回到首頁', handler: restart }],
+        failActions: [{ label: '重新擲筊', retry: true }],
         onSuccess: () => chooseMode(state.mode, true)
       });
     };
@@ -430,6 +430,9 @@
       store.set('qq.need', state.need);
       if (state.panel) state.panel.setNeed(state.need);
     });
+    /* 一開始就先把擲筊用的圖載進快取,進到擲筊畫面時就不用再等 */
+    [QQ.config.handsImage].concat(Object.values(QQ.config.beiAnim || {}).map(a => [].concat(a.src)[1] || [].concat(a.src)[0]))
+      .forEach(u => { if (u) { const im = new Image(); im.src = u; } });
     initModes();
     initSeries();
     initPetition();

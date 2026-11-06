@@ -40,7 +40,7 @@ QQ.config = {
               動畫換了、秒數不同時,請同步改這個數字。
        ※ 自己的 GIF 預設會「一直重播」,結果畫面會跟著回到第一格。請先用 動畫轉檔.html 處理成「只播一次、停在最後一格」,
          它也會告訴您該填的 ms。 */
-  handsImage: 'img/hands.png',
+  handsImage: 'img/hands.webp',
   beiAnim: {
     sheng: { src: ['img/toss_sheng.gif', 'img/toss_sheng.webp'], ms: 4400 },   // 聖筊:一陽一陰
     xiao:  { src: ['img/toss_xiao.gif',  'img/toss_xiao.webp'],  ms: 3000 },   // 笑筊:兩個平面朝上
