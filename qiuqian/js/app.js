@@ -38,7 +38,7 @@
     if (state.panel) { state.panel.destroy(); state.panel = null; }
     state.view = view;
     VIEWS.forEach(v => { $('#view-' + v).hidden = v !== view; });
-    const plain = view === 'mode' || view === 'bei';              // 這兩頁不是求籤流程,不顯示步驟列和標題列的聖筊次數
+    const plain = view === 'mode' || view === 'bei' || (view === 'series' && state.mode === 'query');              // 這兩頁不是求籤流程,不顯示步驟列和標題列的聖筊次數
     $('#steps').hidden = plain;
     $('.rule').hidden = plain;
     if (!plain) renderSteps(STEP_OF[view]);
@@ -74,12 +74,13 @@
     $('[data-act="bei-home"]').addEventListener('click', restart);
   }
 
-  function chooseMode(m) {
+  function chooseMode(m, keep) {
+    if (!keep) state.series = null;
     state.mode = m;
-    if (m === 'qiuqian') return go('series');
+    if (m === 'qiuqian' || (m === 'query' && !state.series)) return go('series');
     go('bei');
     const q = m === 'query';
-    $('#beiTitle').textContent = q ? '只問事不抽籤' : '測試擲筊';
+    $('#beiTitle').textContent = q ? `只問事不抽籤 · ${state.series.temple}` : '測試擲筊';
     $('#beiForm').hidden = !q;
     $('#beiVow').hidden = true;
     $('#bCat').value = ''; $('#bQuestion').value = '';
@@ -94,7 +95,7 @@
       if (q) {
         $('#beiForm').hidden = true;
         const qs = $('#bQuestion').value.trim();
-        $('#beiVow').textContent = `所問之事:${$('#bCat').value}${qs ? `(${qs})` : ''}`;
+        $('#beiVow').textContent = `向${state.series.patron}(${state.series.temple})請示:${$('#bCat').value}${qs ? `(${qs})` : ''}`;
         $('#beiVow').hidden = false;
       }
       state.panel = new QQ.BeiPanel($('#beiPanel'), {
@@ -102,7 +103,7 @@
         successLabel: q ? '神明允准,再問一事' : '再測一次',
         failText: { xiao: '神明笑而不答,請再擲一次。', yin: '神明未允,請再擲一次。' },
         failActions: [{ label: '重新擲筊', retry: true }, { label: '回到首頁', handler: restart }],
-        onSuccess: () => chooseMode(state.mode)
+        onSuccess: () => chooseMode(state.mode, true)
       });
     };
     if (QQ.device.isMobile) QQ.motion.request().then(run); else run();
@@ -129,6 +130,7 @@
 
   function chooseSeries(s) {
     state.series = s;
+    if (state.mode === 'query') { document.querySelectorAll('.patron').forEach(e => (e.textContent = s.patron)); return chooseMode('query', true); }
     document.querySelectorAll('.patron').forEach(e => (e.textContent = s.patron));
     $('#drawCount').textContent = s.total;
     $('#petitionSeries').textContent = `${s.name}(${s.official})`;

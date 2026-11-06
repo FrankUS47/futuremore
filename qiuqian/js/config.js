@@ -42,7 +42,7 @@ QQ.config = {
          它也會告訴您該填的 ms。 */
   handsImage: 'img/hands.png',
   beiAnim: {
-    sheng: { src: ['img/toss_sheng.gif', 'img/toss_sheng.webp'], ms: 5000 },   // 聖筊:一陽一陰
+    sheng: { src: ['img/toss_sheng.gif', 'img/toss_sheng.webp'], ms: 4400 },   // 聖筊:一陽一陰
     xiao:  { src: ['img/toss_xiao.gif',  'img/toss_xiao.webp'],  ms: 3000 },   // 笑筊:兩個平面朝上
     yin:   { src: ['img/toss_yin.gif',   'img/toss_yin.webp'],   ms: 5000 }    // 陰筊:兩個圓背朝上
   },
