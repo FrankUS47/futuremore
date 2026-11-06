@@ -1,7 +1,8 @@
 /* 主流程:選籤種 → 稟告 → 擲筊請示 → 抽籤 → 擲筊確認 → 解籤。 */
 (function (QQ) {
   const $ = (s, r) => (r || document).querySelector(s);
-  const VIEWS = ['series', 'petition', 'ask', 'draw', 'confirm', 'result'];
+  const VIEWS = ['series', 'petition', 'ask', 'draw', 'result'];       // 抽籤與擲筊確認合併在同一頁('draw')
+  const STEP_OF = { series: 0, petition: 1, ask: 2, draw: 3, result: 5 };
   const STEP_LABELS = ['選擇籤種', '稟告神明', '擲筊請示', '抽取籤詩', '擲筊確認', '解籤'];
 
   const state = {
@@ -37,7 +38,7 @@
     if (state.panel) { state.panel.destroy(); state.panel = null; }
     state.view = view;
     VIEWS.forEach(v => { $('#view-' + v).hidden = v !== view; });
-    renderSteps(VIEWS.indexOf(view));
+    renderSteps(STEP_OF[view]);
     window.scrollTo({ top: 0, behavior: 'auto' });
     const hd = $('#view-' + view + ' h2');
     if (hd) { hd.tabIndex = -1; hd.focus({ preventScroll: true }); }
@@ -141,10 +142,15 @@
     });
   }
 
-  /* ── 4. 抽籤 ───────────────────────────────────────── */
+  /* ── 4. 抽籤(同一頁:搖籤筒 → 看到是哪一支 → 按鈕擲筊確認) ───────── */
   function goDraw() {
     go('draw');
+    $('#drawTitle').textContent = '請誠心選一支籤';
+    $('#drawLead').hidden = false;
     $('#redrawNote').textContent = state.redraws ? `已重新取籤 ${state.redraws} 次` : '';
+    $('#drawStage').hidden = false;
+    $('#confirmBox').hidden = true;
+    $('#pickBox').hidden = true;
     const grid = $('#stickGrid');
     grid.classList.remove('picked');
     grid.innerHTML = '';
@@ -160,6 +166,7 @@
     });
   }
 
+  /* 抽出一支籤:籤筒留在畫面上(那支籤已跳出來),下方顯示籤上刻的字,和「擲筊確認」按鈕(先不出現筊) */
   async function onPick(num, btn) {
     state.stick = num;
     state.poem = null;
@@ -170,16 +177,30 @@
     }
     const [res] = await Promise.all([loading, new Promise(r => setTimeout(r, btn ? 900 : 0))]);
     state.poem = res;
-    goConfirm();
+    $('#drawLead').hidden = true;
+    const box = $('#pickBox');
+    box.innerHTML = '';
+    const go1 = h('button', 'btn primary', '擲筊確認:是這支籤嗎?');
+    go1.type = 'button';
+    go1.addEventListener('click', goConfirm);
+    box.append(stickCard(num, res, true), go1);
+    box.hidden = false;
+    box.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
-  /* ── 5. 擲筊確認 ───────────────────────────────────── */
+  /* ── 5. 擲筊確認(同一頁:籤筒消失,左邊是剛剛那支籤,右邊擲筊) ──────── */
   function goConfirm() {
-    go('confirm');
+    if (state.panel) { state.panel.destroy(); state.panel = null; }
+    renderSteps(4);
+    $('#drawTitle').textContent = '此籤是您的籤嗎?';
+    $('#redrawNote').textContent = '';
+    $('#drawStage').hidden = true;
+    $('#confirmBox').hidden = false;
     const n = state.stick;
     const box = $('#confirmPreview');
     box.innerHTML = '';
     box.append(stickCard(n, state.poem));
+    $('#confirmPanel').innerHTML = '';
     state.panel = new QQ.BeiPanel($('#confirmPanel'), {
       need: state.need, successLabel: '恭請解籤',
       failText: {
@@ -214,7 +235,7 @@
 
   /* 確認頁:只顯示「籤上刻的字」(干支與第幾首),不顯示籤詩圖、籤詩與任何解說。
      籤上本來就只刻這些,確定是這支籤(聖筊)之後,才去取籤詩。 */
-  function stickCard(n, res) {
+  function stickCard(n, res, withCaption) {
     const data = res && res.ok ? res.data : null;
     const gz = (data && data.ganzhi) || '';
     const no = `第${QQ.poems.cnNum(n)}${state.series.unit || '籤'}`;
@@ -223,7 +244,8 @@
     stick.append(h('span', 'stick-series', state.series.temple));
     if (gz) stick.append(h('span', 'stick-gz', gz));
     stick.append(h('span', 'stick-no', no));
-    card.append(stick, h('p', 'stick-cap', `籤上刻著:${gz ? gz + ' ' : ''}${no}`));
+    card.append(stick);
+    card.append(h('p', 'stick-cap', `籤上刻著:${gz ? gz + ' ' : ''}${no}`));
     return card;
   }
 
@@ -256,6 +278,8 @@
     const fig = h('figure', 'result-img');
     const img = poemImg(n, data);
     img.addEventListener('error', () => { fig.remove(); body.classList.add('no-img'); });
+    img.title = '點一下放大';
+    img.addEventListener('click', () => fig.classList.toggle('zoom'));
     fig.appendChild(img);
     body.appendChild(fig);
 
@@ -277,7 +301,7 @@
     }
     Object.keys(secs).forEach(key => {           // 有什麼欄位就顯示什麼(順序已在 poems.js 整理好)
       const d = h('details', 'sec');
-      d.open = !QQ.config.sections.collapsed.includes(key);
+      d.open = text.querySelectorAll('details').length < (QQ.config.sections.openCount || 2) && !QQ.config.sections.collapsed.includes(key);
       d.append(h('summary', '', key), h('div', 'sec-body', secs[key]));
       text.appendChild(d);
     });
@@ -295,14 +319,10 @@
     root.innerHTML = '';
 
     const rec = h('section', 'record');
-    rec.append(h('h3', '', '求籤紀錄'));
-    const dl = h('dl');
-    [['求籤人', `${p.name}(${p.age} 歲)`], ['住址', p.addr], ['問事類別', p.category], ['事由說明', p.question],
-     ['求得', `${state.series.name} 第 ${n} 籤`],
-     ['時間', p.date.toLocaleString('zh-TW', { hour12: false })]]
-      .filter(([, v]) => v)
-      .forEach(([k, v]) => dl.append(h('dt', '', k), h('dd', '', v)));
-    rec.appendChild(dl);
+    const line = [`${p.name}(${p.age} 歲)`, p.category, p.question, `${state.series.name} 第${QQ.poems.cnNum(n)}${state.series.unit || '籤'}`]
+      .filter(Boolean).join(' · ');
+    rec.append(h('strong', '', '求籤紀錄 '), h('span', '', line));
+    rec.title = `${p.addr} · ${p.date.toLocaleString('zh-TW', { hour12: false })}`;
     root.appendChild(rec);
 
     root.appendChild(resultCard(n, res));

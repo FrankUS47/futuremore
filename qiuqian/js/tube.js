@@ -24,7 +24,7 @@ QQ.Tube = class Tube {
       const t = i / (N - 1) * 2 - 1;                                   // -1 ~ 1
       const x = 14 + (i / (N - 1)) * 112;                              // 筒口寬度內
       const a = t * 9 + (((i * 37) % 7) - 3) * 0.9;                    // 角度:外側最多約 10 度
-      const h = 150 + ((i * 53) % 9) * 7 + (1 - Math.abs(t)) * 14;     // 高度錯落,中間略高
+      const h = 100 + ((i * 53) % 9) * 5 + (1 - Math.abs(t)) * 12;     // 高度錯落,中間略高
       return `<b style="--x:${x.toFixed(1)}px;--a:${a.toFixed(1)}deg;--h:${h.toFixed(0)}px;--d:${((i % 5) * -.05).toFixed(2)}s;z-index:${i % 2}"></b>`;
     }).join('');
     this.el.innerHTML = `

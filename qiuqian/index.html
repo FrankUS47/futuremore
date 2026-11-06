@@ -42,21 +42,21 @@
 
       <section id="view-petition" class="view" hidden>
         <h2>稟告神明</h2>
-        <p class="lead">您選擇的是 <strong id="petitionSeries"></strong>。請先向<span class="patron">恩主公</span>稟告姓名、年齡、住址,以及所求之事。</p>
+        <p class="lead"><strong id="petitionSeries"></strong> · 請向<span class="patron">恩主公</span>稟告,<b>一事求一籤</b>,只問一件事。</p>
         <form id="petitionForm" novalidate>
-          <div class="notice">一事求一籤:請只問<strong>一件</strong>事,事由寫得越具體越好。</div>
-          <div class="grid2">
+          <div class="grid2 g-name">
             <div class="field"><label for="pName">姓名</label><input id="pName" maxlength="20" autocomplete="name"><p class="err"></p></div>
-            <div class="field"><label for="pAge">年齡 <span class="opt">(選單或直接輸入)</span></label>
-              <input id="pAge" list="ageList" inputmode="numeric" autocomplete="off" placeholder="1–150 歲" maxlength="3">
+            <div class="field"><label for="pAge">年齡</label>
+              <input id="pAge" list="ageList" inputmode="numeric" autocomplete="off" placeholder="1–150歲" maxlength="4">
               <datalist id="ageList"></datalist><p class="err"></p></div>
           </div>
-          <div class="field"><label for="pAddr">住址</label><input id="pAddr" maxlength="80" autocomplete="street-address"><p class="err"></p></div>
-          <div class="field"><label for="pCat">問事類別</label>
-            <select id="pCat" class="sel"></select><p class="err"></p></div>
+          <div class="grid2 g-cat">
+            <div class="field"><label for="pCat">問事類別</label><select id="pCat" class="sel"></select><p class="err"></p></div>
+            <div class="field"><label for="pAddr">住址</label><input id="pAddr" maxlength="80" autocomplete="street-address"><p class="err"></p></div>
+          </div>
           <div class="field">
-            <label for="pQuestion">事由說明 <span class="opt">(選填,寫得越具體越好)</span></label>
-            <textarea id="pQuestion" rows="2" maxlength="100" placeholder="例:今年轉換工作,是否順利?"></textarea>
+            <label for="pQuestion">事由說明 <span class="opt">(選填)</span></label>
+            <textarea id="pQuestion" rows="1" maxlength="100" placeholder="例:今年轉換工作,是否順利?"></textarea>
             <p class="hint"><span id="qCount">0 / 100</span></p>
           </div>
           <div class="vow"><span class="vow-label">稟告詞</span><p id="vowPreview"></p></div>
@@ -77,17 +77,17 @@
       </section>
 
       <section id="view-draw" class="view" hidden>
-        <h2>請誠心選一支籤</h2>
-        <p class="lead">籤筒裡有 <span id="drawCount">100</span> 支籤,籤號與內容都看不到。請誠心搖晃籤筒,停下來之後會跳出一支籤。<span id="redrawNote" class="redraw"></span></p>
-        <div id="tubeBox"></div>
-        <div id="stickGrid" class="stick-grid"></div>
-      </section>
-
-      <section id="view-confirm" class="view" hidden>
-        <h2>此籤是您的籤嗎?</h2>
-        <p class="lead">您抽到的這支籤,籤上只刻著干支與第幾首。請再向神明擲筊,得到聖筊才確定是這支籤,屆時才會取出籤詩。</p>
-        <div id="confirmPreview"></div>
-        <div id="confirmPanel"></div>
+        <h2 id="drawTitle">請誠心選一支籤</h2>
+        <p class="lead" id="drawLead">籤筒裡有 <span id="drawCount">100</span> 支籤,籤號與內容都看不到。請誠心搖晃籤筒,停下來之後會跳出一支籤。<span id="redrawNote" class="redraw"></span></p>
+        <div id="drawStage">
+          <div id="tubeBox"></div>
+          <div id="stickGrid" class="stick-grid"></div>
+          <div id="pickBox" class="pick-box" hidden></div>
+        </div>
+        <div id="confirmBox" class="confirm-box" hidden>
+          <div id="confirmPreview"></div>
+          <div id="confirmPanel"></div>
+        </div>
       </section>
 
       <section id="view-result" class="view" hidden>

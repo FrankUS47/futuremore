@@ -381,3 +381,136 @@ textarea { resize: vertical; }
 .stick-gz { font-size: 1.7rem; font-weight: 700; }
 .stick-no { font-size: 1.5rem; font-weight: 700; color: #ffe08a; }
 .stick-cap { margin: 0; color: var(--ink-soft); }
+
+/* ───── 精簡版面:每一頁盡量在一個畫面內(特別是手機) ───── */
+.app { padding: 0 12px 20px; }
+.top { margin: 0 -12px; padding: 8px 16px; }
+.brand h1 { font-size: 1.15rem; letter-spacing: .25em; }
+.brand p { display: none; }
+.seal { width: 34px; height: 34px; font-size: 1.1rem; }
+.steps { margin: 8px 0; gap: 4px; }
+.steps li span { display: none; }
+.steps li.current span { display: inline; }
+.view { padding: 14px 16px 16px; }
+h2 { font-size: 1.25rem; }
+.lead { margin: .2rem 0 .7rem; font-size: .92rem; }
+.foot { margin-top: 10px; }
+.series-list { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+.series-card { padding: 12px 14px; }
+.banner { margin: 0 0 10px; }
+
+/* 稟告:一頁填完 */
+.g-name { grid-template-columns: 1.4fr 1fr; gap: 10px; }
+.g-cat { grid-template-columns: 1fr 1.5fr; gap: 10px; }
+#view-petition .field { margin-bottom: 6px; }
+#view-petition .field label { font-size: .85rem; margin-bottom: 1px; }
+#view-petition input, #view-petition select, #view-petition textarea { padding: 7px 9px; font-size: 1rem; }
+#view-petition .hint { margin: 0; }
+#view-petition .err:empty { display: none; }
+.vow { margin: 4px 0 8px; padding: 8px 12px; font-size: .88rem; line-height: 1.55; }
+.vow p { margin: 3px 0 0; }
+.check { font-size: .9rem; }
+.privacy { display: none; }
+#view-petition .actions { margin-top: 10px; gap: 8px; flex-wrap: nowrap; }
+#view-petition .actions .btn { flex: 1; padding: 9px 8px; }
+
+/* 擲筊請示 / 確認:縮短 */
+.vow-read { margin: 4px 0 6px; padding: 7px 12px; font-size: .88rem; line-height: 1.5; }
+.bei-panel { margin-top: 4px; }
+.bei-pad { padding: 8px 8px 6px; }
+.bei-pad:not(.no-photo) .bei-stage { height: clamp(170px, 30vh, 290px); }
+.mode-chip { margin: 0 0 4px; font-size: .72rem; }
+.verdict { height: 62px; gap: 10px; }
+.v-mark { width: 58px; height: 58px; font-size: 2.1rem; }
+.v-text { font-size: clamp(1.9rem, 8vw, 2.6rem); }
+.verdict.xiao .v-mark, .verdict.yin .v-mark { width: 46px; height: 46px; font-size: 1.8rem; }
+.verdict.xiao .v-text, .verdict.yin .v-text { font-size: 1.7rem; }
+.meter { margin: 6px auto 2px; }
+.pad-hint { font-size: .85rem; min-height: 1.3em; margin: 2px 0 0; }
+.bei-status { margin: 6px 0 0; min-height: 1.5em; font-size: .95rem; }
+.bei-actions { margin-top: 4px; }
+.bei-actions .btn { padding: 8px 16px; }
+.link-btn { padding: 2px; }
+
+/* 抽籤:籤筒 + 籤上刻的字 + 擲筊確認鈕,同一頁 */
+.tube-panel { margin-top: 0; }
+.tube-pad { padding: 8px 8px 6px; }
+.tube-stage { height: clamp(300px, 42vh, 400px); }
+@media (max-height: 800px) { .tube-stage { zoom: .8; } }
+.tube-links { margin-top: 2px; }
+.pick-box { display: grid; justify-items: center; gap: 8px; margin-top: 10px; }
+.pick-box .stick-card { margin: 0; }
+.pick-box .stick-face { display: flex; flex-direction: row; align-items: center; gap: 10px; width: auto; min-height: 0; padding: 8px 18px 8px 30px; border-radius: 4px 12px 12px 4px; }
+.pick-box .stick-face::before { top: 0; bottom: 0; left: 0; right: auto; width: 16px; height: auto; border-radius: 4px 0 0 4px; }
+.pick-box .stick-face > span { writing-mode: horizontal-tb; letter-spacing: .15em; margin: 0; }
+.pick-box .stick-cap { display: none; }
+.pick-box .btn { width: min(360px, 100%); }
+
+.confirm-box { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: center; }
+.confirm-box .stick-card { margin: 0; }
+.confirm-box .stick-face { width: 62px; min-height: 210px; padding: 22px 4px 14px; gap: 8px; }
+.confirm-box .stick-series { font-size: .65rem; }
+.confirm-box .stick-gz { font-size: 1.2rem; }
+.confirm-box .stick-no { font-size: 1.05rem; }
+.confirm-box .stick-cap { display: none; }
+.confirm-box #confirmPanel { min-width: 0; }
+
+/* 解籤:精簡 */
+.record { margin: 6px 0; padding: 6px 12px; font-size: .85rem; line-height: 1.5; }
+.poem-card { margin: 8px 0; }
+.poem-head { padding: 7px 14px; }
+.poem-no { font-size: 1.2rem; }
+.result-body { grid-template-columns: minmax(96px, 34%) minmax(0, 1fr); gap: 12px; padding: 12px; justify-items: stretch; }
+.result-body.no-img, .result-body.solo { grid-template-columns: minmax(0, 1fr); }
+.result-img { position: static; justify-self: stretch; width: auto; }
+.result-text { gap: 6px; }
+.sec summary { padding: 6px 12px; }
+.sec-body { padding: 8px 12px; font-size: .92rem; line-height: 1.7; }
+.note { margin: 8px 0 0; }
+#view-result .actions { margin-top: 10px; gap: 8px; }
+#view-result .actions .btn { padding: 8px 12px; font-size: .9rem; }
+@media (min-width: 721px) {
+  .view { padding: 20px 26px 22px; }
+  .steps li span { display: inline; }
+  .result-body { grid-template-columns: minmax(180px, 250px) minmax(0, 1fr); gap: 20px; }
+}
+
+/* ── 第 21 版:一頁一屏的細修 ── */
+.pick-box .stick-face > span { white-space: nowrap; flex: none; }
+.pick-box .stick-series { font-size: .78rem; }
+.tube-no { display: none; }                              /* 籤號改顯示在下方的籤條,避免和標題重疊 */
+#petitionForm .vow { display: none; }                    /* 稟告詞改在下一頁(擲筊請示)顯示,稟告頁才放得進一屏 */
+.steps li.current span { display: none !important; }     /* 步驟名稱已在標題,不再重複 */
+.result-text { max-height: calc(100dvh - 300px); min-height: 160px; overflow-y: auto; padding-right: 4px; overscroll-behavior: contain; }
+.result-img img { max-height: calc(100dvh - 300px); object-fit: contain; cursor: zoom-in; }
+.result-img.zoom { position: fixed !important; inset: 0; z-index: 60; width: auto !important; margin: 0; padding: 10px; display: grid; place-items: center; background: rgba(20,8,4,.88); }
+.result-img.zoom img { max-height: 94dvh; max-width: 94vw; width: auto; cursor: zoom-out; }
+#view-result .actions { gap: 8px; margin-top: 8px; }
+#view-result .actions .btn { padding: 8px 12px; font-size: .9rem; }
+.record { margin-bottom: 8px; }
+@media (max-width: 560px) {
+  .bei-pad:not(.no-photo) .bei-stage { height: clamp(190px, 33dvh, 340px); }
+  #view-result [data-act="print"] { display: none; }
+  .tube-stage { height: clamp(260px, 38dvh, 380px); }
+}
+
+/* 第 21 版:再縮一點,解籤頁與擲筊請示頁在手機上也放得進一屏 */
+.result-text { max-height: calc(100dvh - 345px); }
+.result-img img { max-height: calc(100dvh - 345px); }
+.sec summary { padding: 6px 12px; font-size: .95rem; letter-spacing: .12em; }
+.sec-body { padding: 8px 12px; font-size: .92rem; line-height: 1.65; }
+#view-result .view-note, #view-result .note { margin: 6px 0 0; font-size: .75rem; }
+@media (max-width: 560px) {
+  #view-ask .lead { display: none; }
+  #view-result h2 { display: none; }
+  .result-text { max-height: calc(100dvh - 300px); }
+  .result-img img { max-height: calc(100dvh - 300px); }
+  .bei-pad:not(.no-photo) .bei-stage { height: clamp(170px, 30dvh, 300px); }
+}
+.tube-stage { overflow: hidden; }
+@media (max-width: 560px) {
+  .foot, #view-result .note { display: none; }
+  #view-result .record strong { display: none; }
+  #view-result .record { padding: 6px 10px; font-size: .85rem; }
+  .app { padding-bottom: 8px; }
+}
