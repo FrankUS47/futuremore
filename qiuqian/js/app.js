@@ -352,20 +352,35 @@
     body.appendChild(fig);
 
     const text = h('div', 'result-text');
-    const ls = data ? QQ.poems.lines(data) : [];
-    if (ls.length) {
-      const poem = h('div', 'poem-h');
-      ls.forEach(t => poem.appendChild(h('p', '', t)));
-      text.appendChild(poem);
-    }
+    /* 籤詩原文圖檔上已有,這裡不再重複顯示 */
     const secs = (data && data.sections) || {};
     const cat = state.petition && state.petition.category;      // 依問事類別,把對應的那句挑出來放最前面
     const hit = cat && (QQ.config.sections.topicFrom || []).map(k => QQ.poems.topic(secs[k], cat)).find(Boolean);
-    if (hit) {
+    const jie = data && data.jie;
+    const jk = jie && (QQ.config.jieMap[cat] || Object.keys(jie)[0]);
+    if (jie && jie[jk]) {                      // 奉天宮:依問事挑「籤詩籤解」中對應的一項
+      const d = h('details', 'sec sec-focus');
+      d.open = true;
+      d.append(h('summary', '', `您所問的「${cat}」(${jk})`), h('div', 'sec-body', jie[jk]));
+      text.appendChild(d);
+    } else if (hit) {
       const d = h('details', 'sec sec-focus');
       d.open = true;
       d.append(h('summary', '', `您所問的「${cat}」`), h('div', 'sec-body', hit));
       text.appendChild(d);
+    }
+    const g = data && data.gua;
+    if (g) {                                   // 卦頭(含出處與籤詩分析)、卦頭故事
+      const d1 = h('details', 'sec');
+      d1.open = false;
+      d1.append(h('summary', '', `卦頭:${g.title}`),
+        h('div', 'sec-body', [g.source && `出處:${g.source}`, g.analysis].filter(Boolean).join('\n')));
+      text.appendChild(d1);
+      if (g.story) {
+        const d2 = h('details', 'sec');
+        d2.append(h('summary', '', '卦頭故事'), h('div', 'sec-body', g.story));
+        text.appendChild(d2);
+      }
     }
     Object.keys(secs).forEach(key => {           // 有什麼欄位就顯示什麼(順序已在 poems.js 整理好)
       const d = h('details', 'sec');
@@ -433,6 +448,8 @@
     /* 一開始就先把擲筊用的圖載進快取,進到擲筊畫面時就不用再等 */
     [QQ.config.handsImage].concat(Object.values(QQ.config.beiAnim || {}).map(a => [].concat(a.src)[1] || [].concat(a.src)[0]))
       .forEach(u => { if (u) { const im = new Image(); im.src = u; } });
+    const top = document.querySelector('.top');
+    if (top && QQ.config.version) { const v = document.createElement('span'); v.className = 'ver'; v.textContent = QQ.config.version; top.appendChild(v); }
     initModes();
     initSeries();
     initPetition();

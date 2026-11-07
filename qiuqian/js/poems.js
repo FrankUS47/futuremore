@@ -62,7 +62,13 @@ QQ.poems = (function () {
       number_text: raw.number_text, title: raw.title, ganzhi: raw.ganzhi, fortune: raw.fortune,
       poem_lines: raw.poem_lines, poem: raw.poem,
       image: baseName(raw.image),
-      sections
+      sections,
+      /* 奉天宮:卦頭、卦頭故事、籤詩分析、籤詩籤解(依問事挑一項顯示) */
+      gua: raw['卦頭'] ? {
+        title: cleanText(raw['卦頭']), source: cleanText(raw['卦頭出處']), story: cleanText(raw['卦頭故事']),
+        analysis: cleanText(raw['籤詩分析'] && raw['籤詩分析']['卦頭'])
+      } : null,
+      jie: raw['籤詩籤解'] && typeof raw['籤詩籤解'] === 'object' ? raw['籤詩籤解'] : null
     };
   }
 

@@ -543,3 +543,7 @@ h2 { font-size: 1.25rem; }
 .bei-need select { font: inherit; padding: 4px 8px; border: 1.5px solid var(--gold); border-radius: 4px; background: #fffdf5; }
 #view-bei .vow-read { margin: 4px 0; }
 #view-bei form .btn { margin-top: 8px; }
+
+/* 第 33 版:版本號(設定在 js/config.js 的 version) */
+.top { position: relative; }
+.top .ver { position: absolute; top: 2px; left: 6px; font-size: 10px; line-height: 1; color: rgba(255,240,205,.75); letter-spacing: .05em; pointer-events: none; }
